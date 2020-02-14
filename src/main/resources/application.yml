@@ -1,20 +1,33 @@
 spring:
+  h2:
+    console:
+      enabled: true
+      path: /test_db
+
   datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:~/Develop/Github/SpringBlogExam/test_db;AUTO_SERVER=TRUE
+    username: test
+    password: 1234
     hikari:
       pool-name: hikariPool
       transaction-isolation: TRANSACTION_READ_COMMITTED
       connection-timeout: 1000 #ms
       max-lifetime: 580000
       idle-timeout: 0
-      maximum-pool-size: 20
-      minimum-idle: 20
+      maximum-pool-size: 5
+      minimum-idle: 5
 
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
     properties:
       hibernate.dialect.storage_engine: innodb
+
+  redis:
+    cluster:
+      nodes: localhost:7000
 
 server:
   port: 5000

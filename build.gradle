@@ -18,9 +18,19 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-webflux"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 
-    implementation 'org.projectlombok:lombok'
+    compileOnly "org.projectlombok:lombok:1.18.12"
+    testCompileOnly "org.projectlombok:lombok:1.18.12"
+    annotationProcessor "org.projectlombok:lombok:1.18.12"
+    testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
+
     runtimeOnly 'com.h2database:h2'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+test {
+    maxParallelForks = Runtime.runtime.availableProcessors()
+    useJUnitPlatform()
 }
