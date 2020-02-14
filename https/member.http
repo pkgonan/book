@@ -1,0 +1,23 @@
+### 회원 가입
+POST http://localhost:5000/members
+Content-Type: application/json
+
+{
+  "key": "kim",
+  "password": "1234"
+}
+
+
+### 로그인
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+  "key": "kim",
+  "password": "1234"
+}
+
+
+### 로그인 여부 확인
+GET http://localhost:5000/members/4/login
+Content-Type: application/json
