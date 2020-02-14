@@ -29,6 +29,12 @@ spring:
     cluster:
       nodes: localhost:7000
 
+api.book.search:
+  kakao:
+    root.url: https://dapi.kakao.com
+  naver:
+    root.url: https://openapi.naver.com
+
 server:
   port: 5000
   tomcat:
