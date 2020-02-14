@@ -1,0 +1,18 @@
+version: '3.6'
+
+services:
+  redis-cluster:
+    # 자세한 설명은 아래 페이지에서
+    # https://github.com/Grokzen/docker-redis-cluster
+    # redis server 접속 - docker exec -it $containerId bash
+    # Redis Cluster의 Port는 7000입니다.
+    image: 'grokzen/redis-cluster:latest'
+    environment:
+      IP: '0.0.0.0'
+    hostname: localhost
+    ports:
+      - '7000-7050:7000-7050'
+
+volumes:
+  redis_data:
+    driver: local

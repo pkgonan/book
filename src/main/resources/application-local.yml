@@ -1,0 +1,15 @@
+spring:
+  h2:
+    console:
+      enabled: true
+      path: /test_db
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:file:~/Develop/Github/SpringBlogExam/test_db;AUTO_SERVER=TRUE
+    username: test
+    password: 1234
+
+  redis:
+    cluster:
+      nodes: localhost:7000
