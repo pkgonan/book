@@ -5,8 +5,8 @@ plugins {
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
-group 'io.book'
-version '0.1.0-SNAPSHOT'
+project.group    = "${artifactGroup}"
+project.version  = "${artifactVersion}"
 
 sourceCompatibility = 1.8
 
@@ -21,13 +21,13 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-data-redis-reactive"
     implementation "org.springframework.session:spring-session-data-redis"
     implementation "com.querydsl:querydsl-jpa"
-    implementation "org.mindrot:jbcrypt:0.4"
+    implementation "org.mindrot:jbcrypt:${jbcrypt}"
 
-    implementation "com.google.guava:guava:28.2-jre"
-    compileOnly "org.projectlombok:lombok:1.18.12"
-    testCompileOnly "org.projectlombok:lombok:1.18.12"
-    annotationProcessor "org.projectlombok:lombok:1.18.12"
-    testAnnotationProcessor "org.projectlombok:lombok:1.18.12"
+    implementation "com.google.guava:guava:${guava}"
+    compileOnly "org.projectlombok:lombok:${lombok}"
+    testCompileOnly "org.projectlombok:lombok:${lombok}"
+    annotationProcessor "org.projectlombok:lombok:${lombok}"
+    testAnnotationProcessor "org.projectlombok:lombok:${lombok}"
 
     runtimeOnly 'com.h2database:h2'
 
