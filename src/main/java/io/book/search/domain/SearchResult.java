@@ -8,7 +8,7 @@ public class SearchResult {
     private final Metadata metadata;
     private final List<Document> documents;
 
-    SearchResult(final Metadata metadata, final List<Document> documents) {
+    public SearchResult(final Metadata metadata, final List<Document> documents) {
         this.metadata = metadata;
         this.documents = documents;
     }

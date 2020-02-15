@@ -1,8 +1,12 @@
-package io.book.search.domain;
+package io.book.search.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import io.book.common.util.TrackingIdGenerator;
+import io.book.search.domain.Document;
+import io.book.search.domain.Metadata;
+import io.book.search.domain.Search;
+import io.book.search.domain.SearchResult;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
