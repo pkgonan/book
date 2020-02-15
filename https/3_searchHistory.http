@@ -1,4 +1,4 @@
-### 검색 History 조회 API 테스트
+### 테스트 순서 4 : 검색 History 조회 API 테스트
 GET http://localhost:5000/search-histories?size=200
 Content-Type: application/json
 

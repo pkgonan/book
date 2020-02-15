@@ -9,7 +9,7 @@ public class SearchExecuted extends SearchEvent {
     private final String query;
     private final Pageable pageable;
 
-    static SearchExecuted of(final Page<Document> documents, final long memberId, final String query, final Pageable pageable) {
+    public static SearchExecuted of(final Page<Document> documents, final long memberId, final String query, final Pageable pageable) {
         return new SearchExecuted(documents, memberId, query, pageable);
     }
 

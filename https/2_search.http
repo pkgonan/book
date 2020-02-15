@@ -11,7 +11,7 @@ X-Naver-Client-Id: zaCyFz3_5CWy03z9YwLo
 X-Naver-Client-Secret: 1y0KsMqXvQ
 
 
-### 검색 API 테스트
+### 테스트 순서 3 : 검색 API 테스트
 GET http://localhost:5000/search?query=미움받을 용기
 Content-Type: application/json
 

@@ -6,7 +6,7 @@ import io.book.searchhistory.domain.SearchHistoryRepository;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("SearchExecutedEventHandlerInHistory")
 class SearchExecutedEventHandler {
 
     private final SearchHistoryRepository repository;

@@ -1,0 +1,5 @@
+### 테스트 순서 5 : Top 검색 Keyword 조회 API 테스트
+GET http://localhost:5000/search-keywords/top/10
+Content-Type: application/json
+
+###

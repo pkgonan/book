@@ -37,8 +37,14 @@
     * For using JPA
 * spring-boot-starter-data-redis-reactive
     * For using Reactive Redis
+* spring-session-data-redis
+    * For using session management (login)
+* querydsl-jpa
+    * For using type safe query
 * jbcrypt
     * For using password encoding
+* guava
+    * For using easy development
 * lombok
     * For using easy development
 * h2

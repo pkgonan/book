@@ -1,4 +1,4 @@
-### 회원 가입
+### 테스트 순서 1 : 회원 가입
 POST http://localhost:5000/members
 Content-Type: application/json
 
@@ -8,7 +8,7 @@ Content-Type: application/json
 }
 
 
-### 로그인
+### 테스트 순서 2 : 로그인
 POST http://localhost:5000/login
 Content-Type: application/json
 
