@@ -10,7 +10,8 @@ public final class MemberIdSessionExtractor {
 
     public static long extract(final HttpSession session) {
         try {
-            return Long.parseLong(String.valueOf(session.getAttribute(ID)));
+            Object attribute = session.getAttribute(ID);
+            return Long.parseLong(String.valueOf(attribute));
         } catch (Exception e) {
             throw new NotLoginMemberException();
         }

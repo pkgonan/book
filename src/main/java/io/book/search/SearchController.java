@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
@@ -24,7 +24,7 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public Page<DocumentDto> search(@PathVariable final String query,
+    public Page<DocumentDto> search(@RequestParam final String query,
                                      @PageableDefault(size = 100) final Pageable pageable,
                                      final HttpSession session) {
         final long memberId = MemberIdSessionExtractor.extract(session);
