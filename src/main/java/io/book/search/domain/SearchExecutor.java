@@ -17,14 +17,15 @@ public class SearchExecutor {
         this.searchs = searches;
     }
 
-    public Page<Document> execute(final String query, final Pageable pageable) {
+    public SearchExecuted execute(final long memberId, final String query, final Pageable pageable) {
         for (Search search : searchs) {
             try {
-                return search.search(query, pageable);
+                final Page<Document> searchResult = search.search(query, pageable);
+                return SearchExecuted.of(searchResult, memberId, query, pageable);
             } catch (Exception e) {
                 log.error("Failure to search by (query : {}, pageable : {})", query, pageable);
             }
         }
-        return Page.empty();
+        return SearchExecuted.of(Page.empty(), memberId, query, pageable);
     }
 }

@@ -1,5 +1,6 @@
 package io.book.search;
 
+import io.book.member.infra.MemberIdSessionExtractor;
 import io.book.search.service.DocumentDto;
 import io.book.search.service.SearchService;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpSession;
 
 @Validated
 @RestController
@@ -21,8 +24,10 @@ public class SearchController {
     }
 
     @GetMapping("/search")
-    public Page<DocumentDto> isLogin(@PathVariable final String query,
-                                     @PageableDefault(size = 100) final Pageable pageable) {
-        return searchService.search(query, pageable);
+    public Page<DocumentDto> search(@PathVariable final String query,
+                                     @PageableDefault(size = 100) final Pageable pageable,
+                                     final HttpSession session) {
+        final long memberId = MemberIdSessionExtractor.extract(session);
+        return searchService.search(memberId, query, pageable);
     }
 }

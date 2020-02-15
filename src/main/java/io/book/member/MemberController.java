@@ -1,6 +1,7 @@
 package io.book.member;
 
 import io.book.member.exception.AlreadyLoginMemberException;
+import io.book.member.infra.MemberIdSessionExtractor;
 import io.book.member.service.MemberDto;
 import io.book.member.service.MemberParameter;
 import io.book.member.service.MemberService;
@@ -33,7 +34,7 @@ public class MemberController {
         if (!session.isNew()) {
             throw new AlreadyLoginMemberException();
         }
-        session.setAttribute("ID", String.valueOf(loginId));
+        session.setAttribute(MemberIdSessionExtractor.ID, loginId);
     }
 
     @PostMapping("/logout")

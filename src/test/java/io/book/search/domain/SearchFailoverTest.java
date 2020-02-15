@@ -14,7 +14,8 @@ class SearchFailoverTest extends SearchTest {
     @Test
     void searchFailoverTest() {
         SearchExecutor executor = new SearchExecutor(generateSearches());
-        Page<Document> book = executor.execute("book", Pageable.unpaged());
+        SearchExecuted event = executor.execute(1L, "book", Pageable.unpaged());
+        Page<Document> book = event.getDocuments();
         int bookSize = book.getSize();
 
         Assertions.assertTrue(book.hasContent());

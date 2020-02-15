@@ -1,13 +1,15 @@
 package io.book.search.service;
 
+import io.book.common.service.EventPublisherService;
 import io.book.search.domain.Document;
+import io.book.search.domain.SearchExecuted;
 import io.book.search.domain.SearchExecutor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SearchService {
+public class SearchService extends EventPublisherService {
 
     private final SearchExecutor searchExecutor;
 
@@ -15,8 +17,11 @@ public class SearchService {
         this.searchExecutor = searchExecutor;
     }
 
-    public Page<DocumentDto> search(final String query, final Pageable pageable) {
-        return toDocumentDtoPage(searchExecutor.execute(query, pageable));
+    public Page<DocumentDto> search(final long memberId, final String query, final Pageable pageable) {
+        final SearchExecuted event = searchExecutor.execute(memberId, query, pageable);
+
+        publishEvent(event);
+        return toDocumentDtoPage(event.getDocuments());
     }
 
     private Page<DocumentDto> toDocumentDtoPage(final Page<Document> documentPage) {
