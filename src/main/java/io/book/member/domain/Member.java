@@ -4,7 +4,6 @@ import io.book.common.domain.At;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -50,7 +49,7 @@ public class Member {
         this.at.update();
     }
 
-    public boolean isValidPassword(final PasswordEncoder passwordEncoder, final String password) {
-        return passwordEncoder.matches(password, this.password);
+    public boolean isValidPassword(final String password) {
+        return Crypto.checkPassword(password, this.password);
     }
 }

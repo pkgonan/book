@@ -2,8 +2,6 @@ package io.book.member.domain;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.OffsetDateTime;
 
@@ -42,25 +40,21 @@ class MemberTest {
 
     @Test
     void isValidPassword() {
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
         String password = "password";
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = Crypto.encode(password);
         Member member = Member.of("id", encodedPassword);
 
-        boolean validPassword = member.isValidPassword(passwordEncoder, password);
+        boolean validPassword = member.isValidPassword(password);
         Assertions.assertTrue(validPassword);
     }
 
     @Test
     void isInvalidPassword() {
-        PasswordEncoder passwordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
         String password = "password";
-        String encodedPassword = passwordEncoder.encode(password);
+        String encodedPassword = Crypto.encode(password);
         Member member = Member.of("id", encodedPassword);
 
-        boolean validPassword = member.isValidPassword(passwordEncoder, "password1");
+        boolean validPassword = member.isValidPassword("password1");
         Assertions.assertFalse(validPassword);
     }
 }

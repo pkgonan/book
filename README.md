@@ -37,7 +37,7 @@
     * For using JPA
 * spring-boot-starter-data-redis-reactive
     * For using Reactive Redis
-* spring-boot-starter-security
+* jbcrypt
     * For using password encoding
 * lombok
     * For using easy development
