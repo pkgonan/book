@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class MemberDto {
     private long id;
-    private String key;
+    private String userId;
 }

@@ -1,11 +1,15 @@
 package io.book.member;
 
+import io.book.member.exception.AlreadyLoginMemberException;
 import io.book.member.service.MemberDto;
 import io.book.member.service.MemberParameter;
 import io.book.member.service.MemberService;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Validated
@@ -24,12 +28,16 @@ public class MemberController {
     }
 
     @PostMapping("/login")
-    public void login(@RequestBody @Valid final MemberParameter parameter) {
-        memberService.login(parameter);
+    public void login(@RequestBody @Valid final MemberParameter parameter, final HttpSession session) {
+        final long loginId = memberService.login(parameter);
+        if (!session.isNew()) {
+            throw new AlreadyLoginMemberException();
+        }
+        session.setAttribute("ID", String.valueOf(loginId));
     }
 
-    @GetMapping("/members/{id}/login")
-    public boolean isLogin(@PathVariable final Long id) {
-        return memberService.isLogin(id);
+    @PostMapping("/logout")
+    public void logout(final HttpSession httpSession) {
+        httpSession.invalidate();
     }
 }

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Table(
         indexes = {
-                @Index(name = "idx_member_1", columnList = "key")
+                @Index(name = "idx_member_1", columnList = "userId")
         }
 )
 public class Member {
@@ -25,7 +25,7 @@ public class Member {
 
     @NotNull
     @Column(nullable = false, updatable = false)
-    private String key;
+    private String userId;
 
     @NotNull
     @Column(nullable = false)
@@ -35,9 +35,9 @@ public class Member {
     @Embedded
     private At at;
 
-    public static Member of(final String key, final String password) {
+    public static Member of(final String userId, final String password) {
         Member member = new Member();
-        member.key = key;
+        member.userId = userId;
         member.password = password;
         member.at = At.create();
 

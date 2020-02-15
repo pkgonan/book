@@ -3,7 +3,7 @@ POST http://localhost:5000/members
 Content-Type: application/json
 
 {
-  "key": "kim",
+  "userId": "kim",
   "password": "1234"
 }
 
@@ -13,11 +13,18 @@ POST http://localhost:5000/login
 Content-Type: application/json
 
 {
-  "key": "kim",
+  "userId": "kim",
   "password": "1234"
 }
 
 
-### 로그인 여부 확인
-GET http://localhost:5000/members/4/login
+### 로그아웃
+POST http://localhost:5000/logout
 Content-Type: application/json
+
+
+### 로그인 여부 확인
+GET http://localhost:5000/members/1/login
+Content-Type: application/json
+
+###

@@ -11,7 +11,7 @@ class MemberTest {
     void create() {
         Member member = Member.of("id", "password");
 
-        Assertions.assertEquals("id", member.getKey());
+        Assertions.assertEquals("id", member.getUserId());
         Assertions.assertEquals("password", member.getPassword());
         Assertions.assertNotNull(member.getAt());
 
