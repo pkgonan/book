@@ -1,0 +1,17 @@
+### 카카오 실제 Open API 테스트
+GET https://dapi.kakao.com/v3/search/book?target=title&query=미움받을 용기
+Content-Type: application/json
+Authorization: KakaoAK c8b1cbac2461de1e09f561913d085b24
+
+
+### 네이버 실제 Open API 테스트
+GET https://openapi.naver.com/v1/search/book.json?query=미움받을 용기
+Content-Type: application/json
+X-Naver-Client-Id: zaCyFz3_5CWy03z9YwLo
+X-Naver-Client-Secret: 1y0KsMqXvQ
+
+
+### 검색 API 테스트
+GET http://localhost:5000/search?query=미움받을 용기
+Content-Type: application/json
+

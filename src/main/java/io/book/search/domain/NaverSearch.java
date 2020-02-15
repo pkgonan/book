@@ -1,7 +1,9 @@
 package io.book.search.domain;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 import io.book.common.util.TrackingIdGenerator;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
@@ -22,15 +24,19 @@ class NaverSearch implements Search {
     private final WebClient webClient;
 
     NaverSearch(final WebClient.Builder webClientBuilder,
-                final @Value("${api.book.search:naver:root.url}") String rootUrl) {
-        this.webClient = webClientBuilder.baseUrl(rootUrl).build();
+                final @Value("${api.book.search.naver.root.url}") String rootUrl) {
+        this.webClient = webClientBuilder
+                .baseUrl(rootUrl)
+                .defaultHeader("X-Naver-Client-Id", "zaCyFz3_5CWy03z9YwLo")
+                .defaultHeader("X-Naver-Client-Secret", "1y0KsMqXvQ")
+                .build();
     }
 
     @Override
     public Page<Document> search(String query, Pageable pageable) {
         final String trackingId = TrackingIdGenerator.generateTrackingId();
         final NaverSearchResult naverSearchResult = webClient.get()
-                .uri("/v1/search/book.json?d_titl={query}&page={page}&size={size}", query, pageable.getPageNumber(), pageable.getPageSize())
+                .uri("/v1/search/book.json?query={query}&start={page}&display={size}", query, pageable.getPageNumber(), pageable.getPageSize())
                 .retrieve()
                 .bodyToMono(NaverSearchResult.class)
                 .doOnError(e -> log.error("Failure to get books by naver api. (query : {}, pageable : {}, trackingId : {}", query, pageable, trackingId))
@@ -41,14 +47,14 @@ class NaverSearch implements Search {
     }
 
     private SearchResult toSearchResult(final NaverSearchResult naverSearchResult) {
-        final Metadata metadata = toMetaData(naverSearchResult.meta);
+        final Metadata metadata = toMetaData(naverSearchResult);
         final List<Document> documents = toDocuments(naverSearchResult.documents);
 
         return new SearchResult(metadata, documents);
     }
 
-    private Metadata toMetaData(final NaverMeta meta) {
-        return Metadata.of(meta.totalCount);
+    private Metadata toMetaData(final NaverSearchResult searchResult) {
+        return Metadata.of(searchResult.getTotal());
     }
 
     private List<Document> toDocuments(final List<NaverDocument> documents) {
@@ -71,27 +77,39 @@ class NaverSearch implements Search {
                 null);
     }
 
+    @Data
     private static class NaverSearchResult {
-        private NaverMeta meta;
+        @JsonProperty("total")
+        private Integer total;
+        @JsonProperty("start")
+        private Integer start;
+        @JsonProperty("display")
+        private Integer display;
+        @JsonProperty("items")
         private List<NaverDocument> documents;
     }
 
-    private static class NaverMeta {
-        private Integer totalCount;
-        private Integer pageableCount;
-        private Boolean isEnd;
-    }
-
+    @Data
     private static class NaverDocument {
+        @JsonProperty("title")
         private String title;
+        @JsonProperty("description")
         private String description;
+        @JsonProperty("link")
         private String link;
+        @JsonProperty("isbn")
         private String isbn;
+        @JsonProperty("pubdate")
         private String pubdate;
+        @JsonProperty("author")
         private String author;
+        @JsonProperty("publisher")
         private String publisher;
+        @JsonProperty("price")
         private Integer price;
+        @JsonProperty("discount")
         private Integer discount;
+        @JsonProperty("image")
         private String image;
     }
 }

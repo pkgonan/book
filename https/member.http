@@ -22,9 +22,4 @@ Content-Type: application/json
 POST http://localhost:5000/logout
 Content-Type: application/json
 
-
-### 로그인 여부 확인
-GET http://localhost:5000/members/1/login
-Content-Type: application/json
-
 ###

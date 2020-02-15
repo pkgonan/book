@@ -1,6 +1,8 @@
 package io.book.search;
 
 import io.book.member.infra.MemberIdSessionExtractor;
+import io.book.search.exception.InvalidPageRangeException;
+import io.book.search.exception.InvalidPageSizeException;
 import io.book.search.service.DocumentDto;
 import io.book.search.service.SearchService;
 import org.springframework.data.domain.Page;
@@ -25,8 +27,16 @@ public class SearchController {
 
     @GetMapping("/search")
     public Page<DocumentDto> search(@RequestParam final String query,
-                                     @PageableDefault(size = 100) final Pageable pageable,
+                                     @PageableDefault(page = 1, size = 10) final Pageable pageable,
                                      final HttpSession session) {
+
+        if (pageable.getPageNumber() < 1) {
+            throw new InvalidPageRangeException();
+        }
+        if (pageable.getPageSize() > 50) {
+            throw new InvalidPageSizeException();
+        }
+
         final long memberId = MemberIdSessionExtractor.extract(session);
         return searchService.search(memberId, query, pageable);
     }
