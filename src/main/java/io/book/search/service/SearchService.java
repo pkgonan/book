@@ -34,7 +34,7 @@ public class SearchService extends EventPublisherService {
         documentDto.setDescription(document.getDescription());
         documentDto.setUrl(document.getUrl());
         documentDto.setIsbn(document.getIsbn());
-        documentDto.setPublishAt(document.getPublishAt());
+        documentDto.setPublishAt(document.getPublishedAt());
         documentDto.setAuthors(document.getAuthors());
         documentDto.setPublisher(document.getPublisher());
         documentDto.setTranslators(document.getTranslators());

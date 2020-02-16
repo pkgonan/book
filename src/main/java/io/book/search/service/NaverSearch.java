@@ -1,24 +1,22 @@
 package io.book.search.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.google.common.collect.Lists;
 import io.book.common.util.TrackingIdGenerator;
 import io.book.search.domain.Document;
 import io.book.search.domain.Metadata;
 import io.book.search.domain.Search;
 import io.book.search.domain.SearchResult;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Order(1)
@@ -37,64 +35,48 @@ class NaverSearch implements Search {
     }
 
     @Override
-    public Page<Document> search(String query, Pageable pageable) {
+    public SearchResult search(String query, Pageable pageable) {
         final String trackingId = TrackingIdGenerator.generateTrackingId();
-        final NaverSearchResult naverSearchResult = webClient.get()
+        return webClient.get()
                 .uri("/v1/search/book.json?query={query}&start={page}&display={size}", query, pageable.getPageNumber(), pageable.getPageSize())
                 .retrieve()
                 .bodyToMono(NaverSearchResult.class)
                 .doOnError(e -> log.error("Failure to get books by naver api. (query : {}, pageable : {}, trackingId : {}", query, pageable, trackingId))
                 .blockOptional().orElseThrow(IllegalArgumentException::new);
-
-        final SearchResult searchResult = toSearchResult(naverSearchResult);
-        return new PageImpl<>(searchResult.getDocuments(), pageable, searchResult.getTotal());
     }
 
-    private SearchResult toSearchResult(final NaverSearchResult naverSearchResult) {
-        final Metadata metadata = toMetaData(naverSearchResult);
-        final List<Document> documents = toDocuments(naverSearchResult.documents);
+    private static class NaverSearchResult implements SearchResult {
+        @JsonUnwrapped
+        private NaverMeta meta;
+        @JsonProperty("items")
+        private List<NaverDocument> documents;
 
-        return new SearchResult(metadata, documents);
+        @Override
+        public Metadata getMetadata() {
+            return meta;
+        }
+
+        @Override
+        public List<Document> getDocuments() {
+            return Lists.newArrayList(documents);
+        }
     }
 
-    private Metadata toMetaData(final NaverSearchResult searchResult) {
-        return Metadata.of(searchResult.getTotal());
-    }
-
-    private List<Document> toDocuments(final List<NaverDocument> documents) {
-        return documents.stream().map(this::toDocument).collect(Collectors.toList());
-    }
-
-    private Document toDocument(final NaverDocument document) {
-        return Document.of(
-                document.title,
-                document.description,
-                document.link,
-                document.isbn,
-                document.pubdate,
-                Lists.newArrayList(document.author),
-                document.publisher,
-                Lists.newArrayList(),
-                document.price,
-                document.discount,
-                document.image,
-                null);
-    }
-
-    @Data
-    private static class NaverSearchResult {
+    private static class NaverMeta implements Metadata {
         @JsonProperty("total")
         private Integer total;
         @JsonProperty("start")
         private Integer start;
         @JsonProperty("display")
         private Integer display;
-        @JsonProperty("items")
-        private List<NaverDocument> documents;
+
+        @Override
+        public Long getTotal() {
+            return Long.valueOf(total);
+        }
     }
 
-    @Data
-    private static class NaverDocument {
+    private static class NaverDocument implements Document {
         @JsonProperty("title")
         private String title;
         @JsonProperty("description")
@@ -115,5 +97,65 @@ class NaverSearch implements Search {
         private Integer discount;
         @JsonProperty("image")
         private String image;
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getDescription() {
+            return description;
+        }
+
+        @Override
+        public String getUrl() {
+            return link;
+        }
+
+        @Override
+        public String getIsbn() {
+            return isbn;
+        }
+
+        @Override
+        public String getPublishedAt() {
+            return pubdate;
+        }
+
+        @Override
+        public List<String> getAuthors() {
+            return Lists.newArrayList(author);
+        }
+
+        @Override
+        public String getPublisher() {
+            return publisher;
+        }
+
+        @Override
+        public List<String> getTranslators() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public Integer getPrice() {
+            return price;
+        }
+
+        @Override
+        public Integer getSalePrice() {
+            return discount;
+        }
+
+        @Override
+        public String getThumbnail() {
+            return image;
+        }
+
+        @Override
+        public String getStatus() {
+            return null;
+        }
     }
 }

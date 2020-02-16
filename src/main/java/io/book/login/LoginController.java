@@ -1,7 +1,6 @@
 package io.book.login;
 
 import io.book.login.service.LoginService;
-import io.book.member.infra.MemberIdSessionExtractor;
 import io.book.member.service.MemberParameter;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +14,8 @@ import javax.validation.Valid;
 @RestController
 public class LoginController {
 
+    private static final String ID = "ID";
+
     private final LoginService loginService;
 
     LoginController(final LoginService loginService) {
@@ -24,7 +25,7 @@ public class LoginController {
     @PostMapping("/login")
     public void login(@RequestBody @Valid final MemberParameter parameter, final HttpSession session) {
         final long loginId = loginService.login(parameter);
-        session.setAttribute(MemberIdSessionExtractor.ID, loginId);
+        session.setAttribute(ID, loginId);
     }
 
     @PostMapping("/logout")

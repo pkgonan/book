@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -31,19 +30,15 @@ class SearchFailoverTest extends SearchTest {
 
     private static class FailureKakaoSearch implements Search {
         @Override
-        public Page<Document> search(String query, Pageable pageable) {
+        public SearchResult search(String query, Pageable pageable) {
             throw new IllegalArgumentException();
         }
     }
 
     private static class SuccessNaverSearch implements Search {
         @Override
-        public Page<Document> search(String query, Pageable pageable) {
-            final List<Document> documents = Lists.newArrayList();
-            documents.add(generateDocument());
-            documents.add(generateDocument());
-
-            return new PageImpl<>(documents);
+        public SearchResult search(String query, Pageable pageable) {
+            return generateSearchResult();
         }
     }
 }

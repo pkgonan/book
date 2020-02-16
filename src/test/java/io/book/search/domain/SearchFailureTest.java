@@ -30,7 +30,7 @@ class SearchFailureTest extends SearchTest {
 
     private static class FailureKakaoSearch implements Search {
         @Override
-        public Page<Document> search(String query, Pageable pageable) {
+        public SearchResult search(String query, Pageable pageable) {
             throw new IllegalArgumentException();
         }
     }

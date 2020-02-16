@@ -1,19 +1,7 @@
 package io.book.search.domain;
 
-public class Metadata {
+public interface Metadata {
 
-    private long total;
+    Long getTotal();
 
-    private Metadata() {}
-
-    public static Metadata of(long total) {
-        Metadata metadata = new Metadata();
-        metadata.total = total;
-
-        return metadata;
-    }
-
-    public long getTotal() {
-        return total;
-    }
 }

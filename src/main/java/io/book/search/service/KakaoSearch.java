@@ -1,24 +1,20 @@
 package io.book.search.service;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Lists;
 import io.book.common.util.TrackingIdGenerator;
 import io.book.search.domain.Document;
 import io.book.search.domain.Metadata;
 import io.book.search.domain.Search;
 import io.book.search.domain.SearchResult;
-import lombok.Data;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Order(0)
@@ -36,72 +32,48 @@ class KakaoSearch implements Search {
     }
 
     @Override
-    public Page<Document> search(String query, Pageable pageable) {
+    public SearchResult search(String query, Pageable pageable) {
         final String trackingId = TrackingIdGenerator.generateTrackingId();
-        final KakaoSearchResult kakaoSearchResult = webClient.get()
+        return webClient.get()
                 .uri("/v3/search/book?target=title&query={query}&page={page}&size={size}", query, pageable.getPageNumber(), pageable.getPageSize())
                 .retrieve()
                 .bodyToMono(KakaoSearchResult.class)
                 .doOnError(e -> log.error("Failure to get books by kakao api. (query : {}, pageable : {}, trackingId : {}", query, pageable, trackingId))
                 .blockOptional().orElseThrow(IllegalArgumentException::new);
-
-        final SearchResult searchResult = toSearchResult(kakaoSearchResult);
-        return new PageImpl<>(searchResult.getDocuments(), pageable, searchResult.getTotal());
     }
 
-    private SearchResult toSearchResult(final KakaoSearchResult kakaoSearchResult) {
-        final Metadata metadata = toMetaData(kakaoSearchResult.meta);
-        final List<Document> documents = toDocuments(kakaoSearchResult.documents);
-
-        return new SearchResult(metadata, documents);
-    }
-
-    private Metadata toMetaData(final KakaoMeta meta) {
-        return Metadata.of(meta.totalCount);
-    }
-
-    private List<Document> toDocuments(final List<KakaoDocument> documents) {
-        return documents.stream().map(this::toDocument).collect(Collectors.toList());
-    }
-
-    private Document toDocument(final KakaoDocument document) {
-        return Document.of(
-                document.title,
-                document.contents,
-                document.url,
-                document.isbn,
-                document.datetime,
-                document.authors,
-                document.publisher,
-                document.translators,
-                document.price,
-                document.salePrice,
-                document.thumbnail,
-                document.status);
-    }
-
-    @Setter
-    @Data
-    private static class KakaoSearchResult {
+    private static class KakaoSearchResult implements SearchResult {
         @JsonProperty("meta")
         private KakaoMeta meta;
         @JsonProperty("documents")
         private List<KakaoDocument> documents;
+
+        @Override
+        public Metadata getMetadata() {
+            return meta;
+        }
+
+        @Override
+        public List<Document> getDocuments() {
+            return Lists.newArrayList(documents);
+        }
     }
 
-
-    @Data
-    private static class KakaoMeta {
+    private static class KakaoMeta implements Metadata {
         @JsonProperty("total_count")
         private Integer totalCount;
         @JsonProperty("pageable_count")
         private Integer pageableCount;
         @JsonProperty("is_end")
         private Boolean isEnd;
+
+        @Override
+        public Long getTotal() {
+            return Long.valueOf(totalCount);
+        }
     }
 
-    @Data
-    private static class KakaoDocument {
+    private static class KakaoDocument implements Document {
         @JsonProperty("title")
         private String title;
         @JsonProperty("contents")
@@ -126,5 +98,65 @@ class KakaoSearch implements Search {
         private String thumbnail;
         @JsonProperty("status")
         private String status;
+
+        @Override
+        public String getTitle() {
+            return title;
+        }
+
+        @Override
+        public String getDescription() {
+            return contents;
+        }
+
+        @Override
+        public String getUrl() {
+            return url;
+        }
+
+        @Override
+        public String getIsbn() {
+            return isbn;
+        }
+
+        @Override
+        public String getPublishedAt() {
+            return datetime;
+        }
+
+        @Override
+        public List<String> getAuthors() {
+            return authors;
+        }
+
+        @Override
+        public String getPublisher() {
+            return publisher;
+        }
+
+        @Override
+        public List<String> getTranslators() {
+            return translators;
+        }
+
+        @Override
+        public Integer getPrice() {
+            return price;
+        }
+
+        @Override
+        public Integer getSalePrice() {
+            return salePrice;
+        }
+
+        @Override
+        public String getThumbnail() {
+            return thumbnail;
+        }
+
+        @Override
+        public String getStatus() {
+            return status;
+        }
     }
 }

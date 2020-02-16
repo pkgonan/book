@@ -1,23 +1,11 @@
 package io.book.search.domain;
 
-import java.util.Collections;
 import java.util.List;
 
-public class SearchResult {
+public interface SearchResult {
 
-    private final Metadata metadata;
-    private final List<Document> documents;
+    Metadata getMetadata();
 
-    public SearchResult(final Metadata metadata, final List<Document> documents) {
-        this.metadata = metadata;
-        this.documents = documents;
-    }
+    List<Document> getDocuments();
 
-    public long getTotal() {
-        return metadata.getTotal();
-    }
-
-    public List<Document> getDocuments() {
-        return Collections.unmodifiableList(documents);
-    }
 }

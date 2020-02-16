@@ -29,6 +29,9 @@ spring:
     cluster:
       nodes: localhost:7000
 
+  session:
+    store-type: redis
+
 api.book.search:
   kakao:
     root.url: https://dapi.kakao.com

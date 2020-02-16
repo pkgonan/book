@@ -1,15 +1,14 @@
 package io.book.search.service;
 
+import integration.IntegrationTest;
 import io.book.search.domain.Search;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
-@SpringBootTest
-public class SearchImplementBeanOrderTest {
+public class SearchImplementBeanOrderTest implements IntegrationTest {
 
     @Autowired
     private List<Search> searchList;
